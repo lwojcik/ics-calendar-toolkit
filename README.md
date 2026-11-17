@@ -1,15 +1,15 @@
-# ics-toolkit
+# ics-calendar-toolkit
 
-[![npm version](https://img.shields.io/npm/v/ics-toolkit)](https://www.npmjs.com/package/ics-toolkit)
-[![codecov](https://codecov.io/gh/lwojcik/ics-toolkit/graph/badge.svg)](https://codecov.io/gh/lwojcik/ics-toolkit)
-[![Build status](https://ci.appveyor.com/api/projects/status/8qgkia8jo6pgvqtt/branch/main?svg=true)](https://ci.appveyor.com/project/lwojcik/ics-toolkit/branch/main)
+[![npm version](https://img.shields.io/npm/v/ics-calendar-toolkit)](https://www.npmjs.com/package/ics-calendar-toolkit)
+[![codecov](https://codecov.io/gh/lwojcik/ics-calendar-toolkit/graph/badge.svg)](https://codecov.io/gh/lwojcik/ics-calendar-toolkit)
+[![Build status](https://ci.appveyor.com/api/projects/status/8qgkia8jo6pgvqtt/branch/main?svg=true)](https://ci.appveyor.com/project/lwojcik/ics-calendar-toolkit/branch/main)
 
 Build, read and validate `.ics` calendar feeds and keep subscribers from being notified about events that haven't changed.
 
 ## Install
 
 ```sh
-npm install ics-toolkit
+npm install ics-calendar-toolkit
 ```
 
 ## What it does for you
@@ -21,14 +21,14 @@ npm install ics-toolkit
 - **Recovers state.** Read identities back from a feed you already published.
 - **Cleans up the source.** Drops events your source lists twice, and warns you when a feed suddenly shrinks.
 
-The examples below are real files in [`examples/`](examples/), type-checked and run by the tests. Everything is imported from `ics-toolkit`.
+The examples below are real files in [`examples/`](examples/), type-checked and run by the tests. Everything is imported from `ics-calendar-toolkit`.
 
 ## Write a feed
 
 From [`examples/build-feed.ts`](examples/build-feed.ts):
 
 ```ts
-import { buildFeed, type CalendarEvent } from 'ics-toolkit';
+import { buildFeed, type CalendarEvent } from 'ics-calendar-toolkit';
 
 const events: CalendarEvent[] = [
   {
@@ -83,7 +83,7 @@ Calendar apps treat a higher `SEQUENCE` as "this event was updated". If your scr
 Save the `identities` from each run (a JSON file is fine) and pass them into the next one. From [`examples/stable-feed.ts`](examples/stable-feed.ts):
 
 ```ts
-import { trackSequences } from 'ics-toolkit';
+import { trackSequences } from 'ics-calendar-toolkit';
 
 const tracked = trackSequences({
   identities,
@@ -111,7 +111,7 @@ tracked.identities;
 If you lose your stored identities, read them back from the feed that's live:
 
 ```ts
-import { readIdentities } from 'ics-toolkit';
+import { readIdentities } from 'ics-calendar-toolkit';
 
 const identities = readIdentities(publishedFeedText);
 ```
@@ -119,7 +119,7 @@ const identities = readIdentities(publishedFeedText);
 ## Validate before publishing
 
 ```ts
-import { icsValidator } from 'ics-toolkit';
+import { icsValidator } from 'ics-calendar-toolkit';
 
 const result = icsValidator.validate(ics, included.length);
 

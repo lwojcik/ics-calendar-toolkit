@@ -1,5 +1,5 @@
 {
-  "name": "ics-toolkit",
+  "name": "ics-calendar-toolkit",
   "version": "0.1.0",
   "description": "Build, read and validate `.ics` calendar feeds and keep subscribers from being notified about events that haven't changed.",
   "keywords": [
@@ -13,10 +13,10 @@
   "author": "Łukasz Wójcik",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lwojcik/ics-toolkit.git"
+    "url": "git+https://github.com/lwojcik/ics-calendar-toolkit.git"
   },
-  "bugs": "https://github.com/lwojcik/ics-toolkit/issues",
-  "homepage": "https://github.com/lwojcik/ics-toolkit#readme",
+  "bugs": "https://github.com/lwojcik/ics-calendar-toolkit/issues",
+  "homepage": "https://github.com/lwojcik/ics-calendar-toolkit#readme",
   "type": "module",
   "engines": {
     "node": ">=24"
