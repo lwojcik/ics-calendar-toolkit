@@ -8,13 +8,13 @@ environment:
 install:
   - npm ci
 
-build: off
-
 test_script:
   - npm run format:check
   - npm run typecheck
   - npm run lint
   - npm run test:coverage
+
+build_script:
   - npm run build
 
 after_test:
