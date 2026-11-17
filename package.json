@@ -1,6 +1,6 @@
 {
   "name": "ics-calendar-toolkit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Build, read and validate `.ics` calendar feeds and keep subscribers from being notified about events that haven't changed.",
   "keywords": [
     "ics",
