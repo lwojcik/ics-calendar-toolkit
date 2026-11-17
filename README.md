@@ -1,8 +1,8 @@
 # ics-calendar-toolkit
 
 [![npm version](https://img.shields.io/npm/v/ics-calendar-toolkit)](https://www.npmjs.com/package/ics-calendar-toolkit)
-[![codecov](https://codecov.io/gh/lwojcik/ics-toolkit/graph/badge.svg)](https://codecov.io/gh/lwojcik/ics-toolkit)
-[![Build status](https://ci.appveyor.com/api/projects/status/8qgkia8jo6pgvqtt/branch/main?svg=true)](https://ci.appveyor.com/project/lwojcik/ics-toolkit/branch/main)
+[![codecov](https://codecov.io/gh/lwojcik/ics-calendar-toolkit/graph/badge.svg)](https://codecov.io/gh/lwojcik/ics-calendar-toolkit)
+[![Build status](https://ci.appveyor.com/api/projects/status/8qgkia8jo6pgvqtt/branch/main?svg=true)](https://ci.appveyor.com/project/lwojcik/ics-calendar-toolkit/branch/main)
 
 Build, read and validate `.ics` calendar feeds and keep subscribers from being notified about events that haven't changed.
 
