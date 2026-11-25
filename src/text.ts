@@ -7,8 +7,15 @@ export const foldText = (text: string): string =>
   text
     .normalize('NFD')
     .replaceAll(/[\u{300}-\u{36F}]/gu, '')
-    .replaceAll(/[Łł]/g, 'l')
-    .toLowerCase();
+    .toLowerCase()
+    .replaceAll('ß', 'ss')
+    .replaceAll('æ', 'ae')
+    .replaceAll('œ', 'oe')
+    .replaceAll('þ', 'th')
+    .replaceAll('ø', 'o')
+    .replaceAll(/[ðđ]/g, 'd')
+    .replaceAll('ħ', 'h')
+    .replaceAll('ł', 'l');
 
 export const truncate = (text: string, maxLength: number): string => {
   const chars = [...text];
