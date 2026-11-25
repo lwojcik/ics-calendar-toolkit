@@ -12,6 +12,12 @@ describe('text', () => {
     expect(foldText('Łódź ŻÓŁW Crème')).toBe('lodz zolw creme');
   });
 
+  it('folds letters that do not decompose into a base letter', () => {
+    expect(foldText('Øresund Straße Đà Nẵng Æther')).toBe(
+      'oresund strasse da nang aether',
+    );
+  });
+
   it('truncates by characters, not bytes', () => {
     expect(truncate('żółw', 10)).toBe('żółw');
     expect(truncate('żółwik', 4)).toBe('żół…');
