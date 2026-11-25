@@ -12,6 +12,10 @@ describe('text', () => {
     expect(foldText('Łódź ŻÓŁW Crème')).toBe('lodz zolw creme');
   });
 
+  it('folds the whole Polish alphabet', () => {
+    expect(foldText('ąćęłńóśźż ĄĆĘŁŃÓŚŹŻ')).toBe('acelnoszz acelnoszz');
+  });
+
   it('folds letters that do not decompose into a base letter', () => {
     expect(foldText('Øresund Straße Đà Nẵng Æther')).toBe(
       'oresund strasse da nang aether',
