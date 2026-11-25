@@ -1,0 +1,81 @@
+# ics-calendar-toolkit
+
+> Build, read and validate `.ics` calendar feeds, and keep subscribers from being notified about events that haven't changed. ESM only, Node >= 24, one runtime dependency (`ical.js`). Everything is a named export of `ics-calendar-toolkit`.
+
+## Mental model
+
+1. Your source rows become `CalendarEvent` objects.
+2. `trackSequences` decides each event's `sequence` and `lastModified` from stored state, so only really-changed events look updated.
+3. `buildFeed` writes the `.ics` text. Broken events are left out and reported in `invalid`; it does not throw on bad event data.
+4. `icsValidator.validate` checks the finished text before you publish it.
+
+## Types
+
+- `CalendarEvent`: `{ uid, time, summary, location: string | null, geo: { lat, lon } | null, categories: string[], description: string, url, status?: 'CONFIRMED' | 'TENTATIVE' | 'CANCELLED', sequence: number, lastModified: string }`
+- `EventTime`: `{ allDay: false, start, end }` with local date-times like `2026-11-15T18:30:00`, or `{ allDay: true, start, end }` with dates like `2026-11-20`. For all-day events `end` is the day AFTER the last day.
+- `lastModified`: UTC ISO string, e.g. `2026-11-01T09:00:00.000Z`.
+- `CalendarHeader`: `{ prodId, name, description?, refreshInterval (ISO 8601 duration, e.g. 'PT6H'), timeZone: { id, definition: string[] } }`. `definition` is your own `BEGIN:VTIMEZONE ... END:VTIMEZONE` lines, written verbatim; the toolkit does not generate them. See `examples/zone.ts` in the repository for Europe/Berlin.
+
+## Functions
+
+- `buildFeed(events, { header, maxTextLength, render? }) => { ics, included, invalid }`
+  `invalid` is `{ uid, reason }[]`. Events are sorted by start, then UID. Output is byte-stable: same input, same bytes.
+- `trackSequences({ identities, items: Map<uid, T>, options: { runDate, nowIso, keepIdentityDays, hash: (item: T) => string } }) => { entries, counts: { added, updated, removed }, identities }`
+  Pass the previous run's `identities` (a `Record<uid, Identity>`; persist as JSON). Unchanged hash keeps `sequence`/`lastModified`; changed hash bumps `sequence` once; new items start at 0; UIDs unseen for `keepIdentityDays` are forgotten. Pure function, no I/O.
+- `isShrunk({ previous, current, options: { massDisappearanceRatio, massDisappearanceMinEvents } }) => boolean`
+  True when the event count fell sharply. Use it to refuse publishing a feed built from a broken source.
+- `icsValidator.validate(ics: string | Uint8Array, expectedEvents?: number) => { ok, errors: string[], events, checks: string[] }`
+  Never throws. Checks UTF-8, CRLF, line length, control characters, structure, per-event required properties, known time zones, valid dates and coordinates, unique UIDs, and an `ical.js` round trip. `new ICSValidator({ countEvents })` replaces the round-trip counter.
+- `readIdentities(feedText) => { uid, sequence, lastModified }[]`
+  Rebuild lost `trackSequences` state from the live feed.
+- `readEvents(feedText) => CalendarEvent[]`
+  Only for feeds written by this toolkit. Events lacking a property the toolkit always writes (such as `URL`) are silently skipped.
+- `dropDuplicates({ records, subjectOf: (r) => { id, title, text, place, starts }, options: { titlePrefix, minTitle } }) => { kept, dropped: { record, keptInstead }[] }`
+  Removes records describing the same event; first seen wins.
+- Lower-level helpers: `eventLines`, `calendarText`, `escapeText`, `foldLine`, `descriptionLines`, `makeFeedBuilder`, date helpers (`addDays`, `daysBetween`, `dateOf`, `clockOf`, `icsLocal`, `icsUtc`), text helpers (`truncate`, `foldText`, `compareStrings`).
+
+## Minimal working example
+
+```ts
+import { buildFeed, icsValidator, type CalendarEvent } from 'ics-calendar-toolkit';
+
+const events: CalendarEvent[] = [
+  {
+    uid: 'meetup-1@example.org',
+    time: { allDay: false, start: '2026-11-15T18:30:00', end: '2026-11-15T20:00:00' },
+    summary: 'Monthly meetup',
+    location: null,
+    geo: null,
+    categories: [],
+    description: '',
+    url: 'https://example.org/meetups/1',
+    sequence: 0,
+    lastModified: '2026-11-01T09:00:00.000Z',
+  },
+];
+
+const { ics, included, invalid } = buildFeed(events, {
+  header: {
+    prodId: '-//example//community//EN',
+    name: 'Community events',
+    refreshInterval: 'PT6H',
+    timeZone: { id: 'Europe/Berlin', definition: [/* VTIMEZONE lines */] },
+  },
+  maxTextLength: 1000,
+});
+
+const result = icsValidator.validate(ics, included.length);
+if (!result.ok) throw new Error(result.errors.join('\n'));
+```
+
+## Pitfalls
+
+- Timed events are plain local strings in `header.timeZone`; DST gaps and overlaps are your responsibility.
+- Every event must use a `timeZone` the header defines, or it lands in `invalid`.
+- Changing property order or line folding would rewrite every event for every subscriber, so do not post-process `ics`.
+- Always check `invalid` after `buildFeed`; a dropped event is not an exception.
+
+## Docs
+
+- [README](https://github.com/lwojcik/ics-calendar-toolkit#readme): walkthrough with every example.
+- [examples/](https://github.com/lwojcik/ics-calendar-toolkit/tree/main/examples): `build-feed.ts`, `stable-feed.ts`, `zone.ts`; type-checked and run by the tests.

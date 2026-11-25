@@ -7,7 +7,9 @@
     "icalendar",
     "calendar",
     "feed",
-    "rfc5545"
+    "rfc5545",
+    "ai-agents",
+    "llms-txt"
   ],
   "license": "MIT",
   "author": "Łukasz Wójcik",
@@ -22,7 +24,8 @@
     "node": ">=24"
   },
   "files": [
-    "dist"
+    "dist",
+    "llms.txt"
   ],
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.mts",
