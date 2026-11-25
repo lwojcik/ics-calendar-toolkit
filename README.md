@@ -157,6 +157,12 @@ The toolkit doesn't generate `VTIMEZONE` blocks. Your lines are written out exac
 - `readEvents` is meant for feeds written by this toolkit. If an event in the feed has no `URL` (or another property the toolkit always writes), it is silently skipped rather than returned.
 - Local times are plain strings, so DST gaps and overlaps are up to you.
 
+## Using it with AI agents
+
+The package ships [`llms.txt`](llms.txt), a compact API reference with a working example and the common pitfalls, at `node_modules/ics-calendar-toolkit/llms.txt`. Point your coding agent at it, or paste it into context. The types are strict and every function reports problems as return values (`invalid`, `errors`) rather than exceptions, which makes generated code easy to check.
+
+Contributors using agents: see [`AGENTS.md`](AGENTS.md).
+
 ## Development
 
 ```sh
